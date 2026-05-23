@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "Teen Patti",
+    "slug": "teen-patti-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a4a2e"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.teenpatti.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Camera access for profile picture and video chat",
+        "NSMicrophoneUsageDescription": "Microphone access for voice chat",
+        "NSPhotoLibraryUsageDescription": "Photo library access for profile picture",
+        "NSPhotoLibraryAddUsageDescription": "Save photos to your library"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a4a2e"
+      },
+      "package": "com.teenpatti.app",
+      "permissions": [
+        "RECORD_AUDIO",
+        "CAMERA",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "MODIFY_AUDIO_SETTINGS"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "privacyPolicyUrl": "https://harisammar.github.io/teen-patti/privacy.html"
+    },
+    "plugins": [
+      "@sentry/react-native"
+    ]
+  }
+}
