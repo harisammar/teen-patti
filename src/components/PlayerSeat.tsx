@@ -13,6 +13,7 @@ interface PlayerSeatProps {
   showCards: boolean;
   timerSeconds?: number;
   turnDuration?: number;
+  cardSize?: 'sm' | 'md' | 'lg';
 }
 
 const STATUS_COLOR: Record<string, string> = {
@@ -39,6 +40,7 @@ export default function PlayerSeat({
   showCards,
   timerSeconds,
   turnDuration = 30,
+  cardSize = 'sm',
 }: PlayerSeatProps) {
   const isFolded = player.status === 'folded';
   const isWinner = player.status === 'winner';
@@ -106,16 +108,16 @@ export default function PlayerSeat({
                 key={card.id}
                 card={card}
                 faceDown={!showCards || isFolded}
-                size="sm"
-                style={[styles.card, { marginLeft: i > 0 ? -6 : 0 }]}
+                size={cardSize}
+                style={[styles.card, { marginLeft: i > 0 ? (cardSize === 'sm' ? -6 : -10) : 0 }]}
               />
             ))
           : [0, 1, 2].map((i) => (
               <Card
                 key={i}
                 faceDown
-                size="sm"
-                style={[styles.card, { marginLeft: i > 0 ? -6 : 0 }]}
+                size={cardSize}
+                style={[styles.card, { marginLeft: i > 0 ? (cardSize === 'sm' ? -6 : -10) : 0 }]}
               />
             ))}
       </View>
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   seatSelf: {
-    // Current user seat has slightly more prominent styling
+    width: 130,
   },
   timer: {
     position: 'absolute',

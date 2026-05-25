@@ -203,12 +203,17 @@ export default function GameScreen() {
         const isCurrentUser = player.uid === user?.uid;
         const activeEmote = emotes.find((e) => e.playerId === player.uid);
 
+        // Current user gets a wider seat so larger cards have room to display
+        const seatWidth = isCurrentUser ? 130 : 96;
+        const seatOffsetX = seatWidth / 2;
+
         return (
           <View
             key={player.uid}
             style={[
               styles.seatWrapper,
-              { left: pos.x - 48, top: pos.y - 60 },
+              isCurrentUser && styles.seatWrapperSelf,
+              { left: pos.x - seatOffsetX, top: pos.y - 60 },
             ]}
           >
             {activeEmote && (
@@ -228,6 +233,7 @@ export default function GameScreen() {
               }
               timerSeconds={isCurrentUser && player.isCurrentTurn ? timerSeconds : undefined}
               turnDuration={currentRoom?.turnTimer ?? 30}
+              cardSize={isCurrentUser ? 'md' : 'sm'}
             />
           </View>
         );
@@ -473,6 +479,9 @@ const styles = StyleSheet.create({
     width: 96,
     zIndex: 5,
     alignItems: 'center',
+  },
+  seatWrapperSelf: {
+    width: 130,
   },
   floatingEmote: {
     fontSize: 32,
