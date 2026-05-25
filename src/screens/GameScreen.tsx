@@ -220,7 +220,9 @@ export default function GameScreen() {
               <Text style={styles.floatingEmote}>{activeEmote.emote}</Text>
             )}
             <PlayerSeat
-              player={player}
+              // currentPlayer has real cards injected from the private hands
+              // subcollection; game.players always has cards:[] for security.
+              player={isCurrentUser && currentPlayer ? currentPlayer : player}
               isCurrentTurn={player.isCurrentTurn}
               position={idx}
               isCurrentUser={isCurrentUser}
@@ -228,8 +230,12 @@ export default function GameScreen() {
               // rule: you choose when to peek by tapping "See Cards"). After
               // peeking you become 'seen' and pay the full bet rate.
               showCards={
-                isCurrentUser &&
-                (player.status === 'seen' || player.status === 'winner')
+                isCurrentUser && (
+                  (currentPlayer?.status === 'seen') ||
+                  (currentPlayer?.status === 'winner') ||
+                  (player.status === 'seen') ||
+                  (player.status === 'winner')
+                )
               }
               timerSeconds={isCurrentUser && player.isCurrentTurn ? timerSeconds : undefined}
               turnDuration={currentRoom?.turnTimer ?? 30}
