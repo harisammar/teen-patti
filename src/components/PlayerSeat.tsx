@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Player } from '../types';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { Player, Card as CardType } from '../types';
 import Card from './Card';
 import Timer from './Timer';
 import { COLORS } from '../utils/constants';
@@ -44,6 +44,8 @@ export default function PlayerSeat({
 }: PlayerSeatProps) {
   const isFolded = player.status === 'folded';
   const isWinner = player.status === 'winner';
+  const [expandedCard, setExpandedCard] = useState<CardType | null>(null);
+  const canExpand = showCards && !isFolded;
 
   return (
     <View style={[styles.seat, isCurrentUser && styles.seatSelf]}>
@@ -104,26 +106,52 @@ export default function PlayerSeat({
       <View style={styles.cards}>
         {player.cards.length > 0
           ? player.cards.map((card, i) => (
-              <Card
+              <TouchableOpacity
                 key={card.id}
-                card={card}
-                faceDown={!showCards || isFolded}
-                size={cardSize}
-                style={[styles.card, { marginLeft: i > 0 ? (cardSize === 'sm' ? -6 : -10) : 0 }]}
-              />
+                style={{ marginLeft: i > 0 ? (cardSize === 'sm' ? -6 : -10) : 0 }}
+                onPress={() => canExpand && setExpandedCard(card)}
+                activeOpacity={canExpand ? 0.7 : 1}
+                disabled={!canExpand}
+              >
+                <Card
+                  card={card}
+                  faceDown={!showCards || isFolded}
+                  size={cardSize}
+                />
+              </TouchableOpacity>
             ))
           : [0, 1, 2].map((i) => (
               <Card
                 key={i}
                 faceDown
                 size={cardSize}
-                style={[styles.card, { marginLeft: i > 0 ? (cardSize === 'sm' ? -6 : -10) : 0 }]}
+                style={{ marginLeft: i > 0 ? (cardSize === 'sm' ? -6 : -10) : 0 }}
               />
             ))}
       </View>
 
       {/* Fold overlay */}
       {isFolded && <View style={styles.foldOverlay} />}
+
+      {/* Full-screen card expand modal — only for current user's face-up cards */}
+      <Modal
+        visible={!!expandedCard}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={() => setExpandedCard(null)}
+      >
+        <TouchableOpacity
+          style={styles.expandOverlay}
+          activeOpacity={1}
+          onPress={() => setExpandedCard(null)}
+        >
+          {expandedCard && (
+            <Card card={expandedCard} faceDown={false} size="xl" />
+          )}
+          <Text style={styles.expandHint}>Tap anywhere to close</Text>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 }
@@ -221,6 +249,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   card: {},
+  expandOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.88)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  expandHint: {
+    color: 'rgba(255,255,255,0.4)',
+    fontSize: 13,
+    marginTop: 28,
+    letterSpacing: 0.5,
+  },
   foldOverlay: {
     position: 'absolute',
     top: 0,

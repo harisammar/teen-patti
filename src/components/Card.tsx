@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { Card as CardType, Suit } from '../types';
 import { SUIT_SYMBOLS, SUIT_COLORS } from '../utils/constants';
 
-type CardSize = 'sm' | 'md' | 'lg';
+type CardSize = 'sm' | 'md' | 'lg' | 'xl';
 
 interface CardProps {
   card?: CardType;
@@ -12,10 +12,11 @@ interface CardProps {
   style?: ViewStyle;
 }
 
-const SIZE_CONFIG: Record<CardSize, { width: number; height: number; fontSize: number; cornerFontSize: number }> = {
-  sm: { width: 30, height: 42, fontSize: 14, cornerFontSize: 8 },
-  md: { width: 44, height: 62, fontSize: 22, cornerFontSize: 11 },
-  lg: { width: 60, height: 84, fontSize: 30, cornerFontSize: 14 },
+const SIZE_CONFIG: Record<CardSize, { width: number; height: number; fontSize: number; cornerFontSize: number; borderRadius: number }> = {
+  sm: { width: 30, height: 42, fontSize: 14, cornerFontSize: 8,  borderRadius: 4  },
+  md: { width: 44, height: 62, fontSize: 22, cornerFontSize: 11, borderRadius: 6  },
+  lg: { width: 60, height: 84, fontSize: 30, cornerFontSize: 14, borderRadius: 8  },
+  xl: { width: 160, height: 224, fontSize: 80, cornerFontSize: 26, borderRadius: 16 },
 };
 
 export default function Card({ card, faceDown = false, size = 'md', style }: CardProps) {
@@ -27,7 +28,7 @@ export default function Card({ card, faceDown = false, size = 'md', style }: Car
         style={[
           styles.card,
           styles.cardBack,
-          { width: config.width, height: config.height },
+          { width: config.width, height: config.height, borderRadius: config.borderRadius },
           style,
         ]}
       >
@@ -40,21 +41,24 @@ export default function Card({ card, faceDown = false, size = 'md', style }: Car
   const textColor = isRed ? '#e74c3c' : '#1a1a2e';
   const suitSymbol = SUIT_SYMBOLS[card.suit];
 
+  // Line-height scales with corner font so xl cards don't overlap
+  const cornerLineH = Math.round(config.cornerFontSize * 1.25);
+
   return (
     <View
       style={[
         styles.card,
         styles.cardFront,
-        { width: config.width, height: config.height },
+        { width: config.width, height: config.height, borderRadius: config.borderRadius },
         style,
       ]}
     >
       {/* Top-left corner */}
       <View style={styles.corner}>
-        <Text style={[styles.cornerValue, { color: textColor, fontSize: config.cornerFontSize }]}>
+        <Text style={[styles.cornerValue, { color: textColor, fontSize: config.cornerFontSize, lineHeight: cornerLineH }]}>
           {card.value}
         </Text>
-        <Text style={[styles.cornerSuit, { color: textColor, fontSize: config.cornerFontSize }]}>
+        <Text style={[styles.cornerSuit, { color: textColor, fontSize: config.cornerFontSize, lineHeight: cornerLineH }]}>
           {suitSymbol}
         </Text>
       </View>
@@ -66,10 +70,10 @@ export default function Card({ card, faceDown = false, size = 'md', style }: Car
 
       {/* Bottom-right corner (inverted) */}
       <View style={[styles.corner, styles.cornerBottomRight]}>
-        <Text style={[styles.cornerValue, { color: textColor, fontSize: config.cornerFontSize }]}>
+        <Text style={[styles.cornerValue, { color: textColor, fontSize: config.cornerFontSize, lineHeight: cornerLineH }]}>
           {card.value}
         </Text>
-        <Text style={[styles.cornerSuit, { color: textColor, fontSize: config.cornerFontSize }]}>
+        <Text style={[styles.cornerSuit, { color: textColor, fontSize: config.cornerFontSize, lineHeight: cornerLineH }]}>
           {suitSymbol}
         </Text>
       </View>
@@ -120,8 +124,8 @@ const styles = StyleSheet.create({
     right: 4,
     transform: [{ rotate: '180deg' }],
   },
-  cornerValue: { fontWeight: '800', lineHeight: 13 },
-  cornerSuit: { lineHeight: 11 },
+  cornerValue: { fontWeight: '800' },
+  cornerSuit: {},
   centerSuit: { fontWeight: '400' },
   wildBadge: {
     position: 'absolute',
