@@ -1,0 +1,60 @@
+# ┌──────────────────────────────────────────────────────┐
+# │  Flow 04 — Profile Screen                            │
+# │                                                      │
+# │  Covers:                                             │
+# │   ✓ Sign in                                         │
+# │   ✓ Navigate to Profile tab                        │
+# │   ✓ Player name visible                             │
+# │   ✓ Stats cards visible (Games Played, Win Rate…)  │
+# │   ✓ Edit name flow                                  │
+# │   ✓ Privacy Policy link present                     │
+# │   ✓ Sign-out flow                                   │
+# └──────────────────────────────────────────────────────┘
+
+appId: ${APP_ID}
+---
+
+# ── Sign in ─────────────────────────────────────────────────────────────────
+- launchApp:
+    clearState: false
+- assertVisible: "Teen Patti"
+- tapOn: "Sign In"
+- tapOn:
+    text: "you@example.com"
+    optional: true
+- inputText: ${TEST_EMAIL}
+- tapOn:
+    text: "Min 6 characters"
+    optional: true
+- inputText: ${TEST_PASSWORD}
+- tapOn:
+    text: "Sign In"
+    index: 1
+- assertVisible: "Create Room"
+
+# ── Open Profile tab ─────────────────────────────────────────────────────────
+- tapOn: "Profile"
+- assertVisible: "Games Played"
+- assertVisible: "Games Won"
+- assertVisible: "Win Rate"
+- assertVisible: "Total Points"
+
+# ── Edit display name ────────────────────────────────────────────────────────
+- tapOn: "✏️"                        # pencil icon next to player name
+- clearText
+- inputText: "TestPlayer"
+- tapOn: "Save"
+- assertVisible: "TestPlayer"
+
+# ── Privacy Policy link ──────────────────────────────────────────────────────
+- assertVisible: "Privacy Policy"
+# We don't tap it to avoid leaving the app to the browser in CI
+
+# ── Sign out ─────────────────────────────────────────────────────────────────
+- scrollUntilVisible:
+    element:
+      text: "Sign Out"
+    direction: DOWN
+- tapOn: "Sign Out"
+- tapOn: "Sign Out"                 # confirm alert
+- assertVisible: "Sign In"

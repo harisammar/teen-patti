@@ -6,7 +6,22 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+
+    "test": "bash scripts/test.sh --unit",
+    "test:unit": "npx jest --no-coverage --verbose",
+    "test:watch": "npx jest --watch",
+    "test:coverage": "npx jest --coverage",
+    "test:file": "npx jest --no-coverage --verbose --testPathPattern",
+    "test:name": "npx jest --no-coverage --verbose --testNamePattern",
+
+    "test:e2e": "bash scripts/test-e2e.sh",
+    "test:e2e:ios": "bash scripts/test-e2e.sh --ios",
+    "test:e2e:android": "bash scripts/test-e2e.sh --android",
+    "test:e2e:both": "bash scripts/test-e2e.sh --both",
+    "test:e2e:flow": "bash scripts/test-e2e.sh --ios --flow",
+
+    "test:all": "bash scripts/test.sh --all"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -39,7 +54,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^12.9.0",
+    "@types/jest": "^29.5.14",
     "@types/react": "~18.3.12",
+    "jest": "^29.7.0",
+    "jest-expo": "~52.0.0",
     "typescript": "^5.3.3"
   },
   "private": true

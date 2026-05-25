@@ -1,0 +1,9 @@
+# Shared Maestro configuration
+# Override TEST_EMAIL / TEST_PASSWORD via environment before running:
+#   MAESTRO_TEST_EMAIL=you@example.com MAESTRO_TEST_PASSWORD=secret maestro test ...
+
+env:
+  APP_ID: com.teenpatti.app        # iOS bundle ID & Android package
+  TEST_EMAIL: testplayer@example.com
+  TEST_PASSWORD: testpass123
+  TEST_NAME: TestPlayer

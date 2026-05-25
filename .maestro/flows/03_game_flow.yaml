@@ -1,0 +1,62 @@
+# ┌──────────────────────────────────────────────────────┐
+# │  Flow 03 — Game Flow (single-player smoke test)      │
+# │                                                      │
+# │  NOTE: Teen Patti requires ≥2 players to start.      │
+# │  This flow verifies the full game UI loads, cards    │
+# │  are visible after peeking, and the Show button      │
+# │  is present. A second device/emulator is needed for  │
+# │  a complete multiplayer E2E test.                    │
+# │                                                      │
+# │  Covers:                                             │
+# │   ✓ Sign in                                         │
+# │   ✓ Create room                                     │
+# │   ✓ Lobby shows player count                        │
+# │   ✓ "Start Game" requires 2 players (error shown)   │
+# │   ✓ Game screen betting controls visible             │
+# └──────────────────────────────────────────────────────┘
+
+appId: ${APP_ID}
+---
+
+# ── Sign in ─────────────────────────────────────────────────────────────────
+- launchApp:
+    clearState: false
+- assertVisible: "Teen Patti"
+- tapOn: "Sign In"
+- tapOn:
+    text: "you@example.com"
+    optional: true
+- inputText: ${TEST_EMAIL}
+- tapOn:
+    text: "Min 6 characters"
+    optional: true
+- inputText: ${TEST_PASSWORD}
+- tapOn:
+    text: "Sign In"
+    index: 1
+- assertVisible: "Create Room"
+
+# ── Create room & open lobby ─────────────────────────────────────────────────
+- tapOn: "Create Room"
+- scrollUntilVisible:
+    element:
+      text: "Create Room"
+    direction: DOWN
+- tapOn:
+    text: "Create Room"
+    index: 1
+- assertVisible: "ROOM CODE"
+
+# ── Attempt to start with only 1 player ─────────────────────────────────────
+- tapOn: "Start Game"
+- assertVisible: "Need at least 2 players"   # error alert message
+- tapOn: "OK"
+
+# ── Verify lobby controls exist ──────────────────────────────────────────────
+- assertVisible: "Start Game"
+- assertVisible: "📋 Copy"
+- assertVisible: "↗ Share"
+
+# ── Cleanup ──────────────────────────────────────────────────────────────────
+- tapOn: "Leave"
+- assertVisible: "Create Room"

@@ -1,0 +1,57 @@
+# ┌──────────────────────────────────────────────────────┐
+# │  Flow 02 — Room Creation & Lobby                     │
+# │                                                      │
+# │  Covers:                                             │
+# │   ✓ Sign in                                         │
+# │   ✓ Create a room (all default settings)            │
+# │   ✓ Room lobby visible with room code               │
+# │   ✓ Copy room code                                  │
+# │   ✓ Leave room back to home                        │
+# └──────────────────────────────────────────────────────┘
+
+appId: ${APP_ID}
+---
+
+# ── Sign in ─────────────────────────────────────────────────────────────────
+- launchApp:
+    clearState: false
+- assertVisible: "Teen Patti"
+- tapOn: "Sign In"
+- tapOn:
+    text: "you@example.com"
+    optional: true
+- inputText: ${TEST_EMAIL}
+- tapOn:
+    text: "Min 6 characters"
+    optional: true
+- inputText: ${TEST_PASSWORD}
+- tapOn:
+    text: "Sign In"
+    index: 1
+- assertVisible: "Create Room"
+
+# ── Create room ─────────────────────────────────────────────────────────────
+- tapOn: "Create Room"
+
+# Create Room screen — assert it loaded
+- assertVisible: "Classic"          # default variant chip
+
+# Scroll to and tap Create
+- scrollUntilVisible:
+    element:
+      text: "Create Room"
+    direction: DOWN
+- tapOn:
+    text: "Create Room"
+    index: 1                        # the submit button, not the heading
+
+# ── Room Lobby ───────────────────────────────────────────────────────────────
+- assertVisible: "ROOM CODE"
+- assertVisible: "Start Game"       # admin sees this button
+
+# Copy the room code
+- tapOn: "📋 Copy"
+
+# ── Leave ────────────────────────────────────────────────────────────────────
+- tapOn: "Leave"
+- assertVisible: "Create Room"      # back on home screen

@@ -1,0 +1,53 @@
+# ┌──────────────────────────────────────────────────────┐
+# │  Flow 01 — Authentication                            │
+# │                                                      │
+# │  Covers:                                             │
+# │   ✓ App launch                                       │
+# │   ✓ Sign-in with email & password                   │
+# │   ✓ Landing on the home screen                      │
+# │   ✓ Sign-out from Profile tab                       │
+# └──────────────────────────────────────────────────────┘
+
+appId: ${APP_ID}
+---
+
+# 1. Launch the app fresh
+- launchApp:
+    clearState: false  # keep existing install; change to true for a clean slate
+
+# 2. Wait for the auth screen
+- assertVisible: "Teen Patti"
+
+# 3. Make sure "Sign In" tab is active (it's the default)
+- tapOn: "Sign In"
+
+# 4. Fill in credentials
+- tapOn:
+    text: "you@example.com"         # placeholder text on the email field
+    optional: true
+- inputText: ${TEST_EMAIL}
+
+- tapOn:
+    text: "Min 6 characters"        # placeholder on the password field
+    optional: true
+- inputText: ${TEST_PASSWORD}
+
+# 5. Submit
+- tapOn:
+    text: "Sign In"
+    index: 1                        # avoid matching the tab label (index 0)
+
+# 6. Home screen should appear
+- assertVisible: "Teen Patti"
+- assertVisible: "Create Room"
+- assertVisible: "Join Room"
+
+# 7. Sign out to leave the app in a clean state for the next flow
+- tapOn: "Profile"                  # bottom tab
+- scrollUntilVisible:
+    element:
+      text: "Sign Out"
+    direction: DOWN
+- tapOn: "Sign Out"
+- tapOn: "Sign Out"                 # confirm the alert
+- assertVisible: "Sign In"
